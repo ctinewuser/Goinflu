@@ -126,27 +126,49 @@ class Admin extends Admin_Controller {
          $data['post'] = $this->common->getData('post', array(), array());
         $this->adminHtml('Post List', 'post-list', $data);
     }
-     public function upcomingChatList()
-    {
-         $data['chat'] = $this->common->getData('chat_schdule', array(), array());
-        $this->adminHtml('Upcoming Chat Schdule List', 'chat-list', $data);
+    public function makeArtist() {
+        $id = $this->uri->segment(3);
+        $m = $this->common->updateData('user', array('user_type' => 1), array('id' => $id));
+        $this->session->set_flashdata('success', 'Now! Fan Become an Artist .');
+        redirect(base_url('admin/artistList'));
     }
-    public function upcomingVideoList()
-    {
-    	  $data['video'] = $this->common->getData('video_schdule', array(), array());
-        $this->adminHtml('Upcoming Video Schdule List', 'video-list', $data);
+    public function credit_amount() {
+        $data['amount'] = $this->common->getData('credit_amount', array());
+        $this->adminHtml('Payable Credits', 'credit-amount-list', $data);
     }
-    public function upcomingPostList()
-    {
-    	  $data['postdata'] = $this->common->getData('post_schdule', array(), array());
-        $this->adminHtml('Upcoming Post Schdule List', 'post-schdule-list', $data);
+    public function catList() {
+        $data['cat'] = $this->common->getData('genre_category', array());
+        $this->adminHtml('Genre List', 'cat-list', $data);
     }
-     public function followerUser()
-     {
-     	$data['follower'] = $this->common->getData('follower', array(), array());
-        $this->adminHtml('User Follower List', 'follower-list', $data);
-     }
-   
+    public function feedList() {
+        $data['feed'] = $this->common->getData('post', array());
+        $this->adminHtml('Feed List', 'feed-list', $data);
+    }
+    public function show_pinboard() {
+        $this->db->select('PB.*');
+        $this->db->from('pinboard as PB');
+        $this->db->group_by('PB.user_id');
+        $query = $this->db->get();
+        $pin_list = $query->result_array();
+        $data['pin'] = $pin_list;
+        $this->adminHtml('Pin Board List', 'pinboard-list', $data);
+    }
+    public function show_payments(){
+       $data['payments'] = $this->common->getData('payments', array());
+        $this->adminHtml('Payment List', 'paymenthistory', $data);   
+    }
+    public function show_concert() {
+        $data['concert'] = $this->common->getData('concerts', array());
+        $this->adminHtml('Concert List', 'concert-list', $data);
+    }
+    public function show_donaterlist() {
+        $data['donate'] = $this->common->getData('donate_bits', array());
+        $this->adminHtml('Donaters List', 'donaters_list', $data);
+    }
+    public function goal_list() {
+        $data['goal'] = $this->common->getData('goals', array());
+        $this->adminHtml('Credit Goal List', 'goal-list', $data);
+    }
     public function credit_list() {
         $this->db->select('C.*,SUM(amount) as amount');
         $this->db->from('credits as C');
@@ -734,10 +756,10 @@ class Admin extends Admin_Controller {
         }
     }
     public function dashboard() {
-        $data['user'] = $this->common->getData('user', array('user_type' => '0'), array('count'));
-         $data['post'] = $this->common->getData('post', array(), array('count'));
-         $data['influ'] = $this->common->getData('user', array('user_type' => '1'), array('count'));
-         $data['like'] = $this->common->getData('post_comment_like', array(), array('count'));
+        $data['user'] = $this->common->getData('user', array(), array('count'));
+        // $data['follower'] = $this->common->getData('follower', array(), array('count'));
+        // $data['concerts'] = $this->common->getData('goals', array(), array('count'));
+        // $data['goals'] = $this->common->getData('goals', array(), array('count'));
         $this->adminHtml('Dashboard', 'admin/dashboard', $data);
     }
     public function adminList() {
